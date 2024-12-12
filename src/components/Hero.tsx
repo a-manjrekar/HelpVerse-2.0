@@ -1,7 +1,14 @@
 import React from 'react';
-import { Search } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export function Hero() {
+  const navigate = useNavigate();
+
+  const handleExploreEvents = () => {
+    const eventsSection = document.getElementById('events');
+    eventsSection?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="relative bg-indigo-900 pt-24">
       <div className="absolute inset-0">
@@ -20,17 +27,13 @@ export function Hero() {
           Find meaningful opportunities to contribute and create lasting impact.
         </p>
         
-        <div className="mt-10 max-w-xl">
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center">
-              <Search className="h-5 w-5 text-gray-400" />
-            </div>
-            <input
-              type="text"
-              className="block w-full pl-10 pr-3 py-3 border border-transparent rounded-md leading-5 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              placeholder="Search for volunteer opportunities..."
-            />
-          </div>
+        <div className="mt-10">
+          <button
+            onClick={handleExploreEvents}
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-white hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Explore Events
+          </button>
         </div>
       </div>
     </div>

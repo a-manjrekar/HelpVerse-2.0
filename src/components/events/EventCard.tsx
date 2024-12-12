@@ -1,9 +1,9 @@
 import React from 'react';
 import { MapPin, Calendar, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { saveRegistration, getRegistrations } from '../utils/localStorage';
-import type { Event } from '../types';
+import { useAuth } from '../../contexts/AuthContext';
+import { saveRegistration, getRegistrations } from '../../utils/localStorage';
+import type { Event } from '../../types';
 
 interface EventCardProps {
   event: Event;

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { getUsers, saveUser } from '../utils/localStorage';
 
 interface User {
   id: string;
@@ -22,8 +23,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for stored user data
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
@@ -31,21 +31,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
-    // Simulate API call
     setIsLoading(true);
     try {
-      // In a real app, this would be an API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const users = getUsers();
+      const user = users.find((u: any) => u.email === email && u.password === password);
       
-      const mockUser: User = {
-        id: '1',
-        email,
-        name: 'John Doe',
-        role: 'volunteer'
-      };
+      if (!user) {
+        throw new Error('Invalid credentials');
+      }
       
-      setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
+      setUser(user);
+      localStorage.setItem('currentUser', JSON.stringify(user));
     } finally {
       setIsLoading(false);
     }
@@ -54,18 +50,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = async (email: string, password: string, name: string, role: 'volunteer' | 'organizer') => {
     setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const mockUser: User = {
-        id: '1',
+      const users = getUsers();
+      if (users.some((u: any) => u.email === email)) {
+        throw new Error('Email already exists');
+      }
+
+      const newUser = {
+        id: crypto.randomUUID(),
         email,
+        password,
         name,
         role
       };
       
-      setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
+      saveUser(newUser);
+      setUser(newUser);
+      localStorage.setItem('currentUser', JSON.stringify(newUser));
     } finally {
       setIsLoading(false);
     }
@@ -73,7 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user');
+    localStorage.removeItem('currentUser');
   };
 
   return (

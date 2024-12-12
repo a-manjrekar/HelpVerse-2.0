@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { AuthProvider } from './contexts/AuthContext';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { EventList } from './components/EventList';
@@ -9,11 +9,10 @@ import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { About } from './pages/About';
 import { Dashboard } from './pages/Dashboard';
+import { CreateEvent } from './pages/CreateEvent';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 function AppContent() {
-  const { user } = useAuth();
-  
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -40,6 +39,14 @@ function AppContent() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/create-event"
+            element={
+              <ProtectedRoute>
+                <CreateEvent />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
       
@@ -57,12 +64,8 @@ function AppContent() {
               <ul className="space-y-2">
                 <li><Link to="/" className="text-gray-400 hover:text-white">Events</Link></li>
                 <li><Link to="/about" className="text-gray-400 hover:text-white">About</Link></li>
-                {!user && (
-                  <>
-                    <li><Link to="/login" className="text-gray-400 hover:text-white">Login</Link></li>
-                    <li><Link to="/register" className="text-gray-400 hover:text-white">Sign Up</Link></li>
-                  </>
-                )}
+                <li><Link to="/login" className="text-gray-400 hover:text-white">Login</Link></li>
+                <li><Link to="/register" className="text-gray-400 hover:text-white">Sign Up</Link></li>
               </ul>
             </div>
             <div>
@@ -84,11 +87,11 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <AppContent />
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 
